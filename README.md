@@ -1,29 +1,13 @@
-# webshop
+# :shopping_cart: WEBSHOP-VUE :shopping_cart:
 
-## Project setup
-```
-npm install
-```
+## Description
+Simple full webshop project.
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+The application was created using: Vue.js, BootstrapVue, SASS and browser local storage.
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Installation
+1. Download or clone the project
+2. Go into the project `cd webshop-vue`
+3. Run `npm install`
+4. Run `npm run serve`
+5. Visit `http://localhost:8080/`
