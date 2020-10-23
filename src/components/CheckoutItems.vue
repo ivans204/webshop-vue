@@ -12,6 +12,12 @@
       <b-col>{{ (item.price * item.quantity).toFixed(2) }} €</b-col>
     </b-row>
     <b-row class="checkout-table">
+      <b-col>Promotions:</b-col>
+      <b-col>
+        <ul class="promotions">
+          <li class="promotions-item" v-for="(code, index) in activeCodes" :key="index">{{ code.code }}</li>
+        </ul>
+      </b-col>
       <b-col class="text-right">Total:</b-col>
       <b-col class="font-weight-bold">{{ cartPriceTotal }} €</b-col>
     </b-row>
@@ -53,5 +59,11 @@ export default {
 .checkout-table {
   padding: 15px 0;
   border-bottom: 1px solid #dee2e6;
+}
+
+.promotions {
+  .promotions-item {
+    list-style: none;
+  }
 }
 </style>

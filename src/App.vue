@@ -32,9 +32,12 @@ export default {
     setData(data = this.cart) {
       localStorage.setItem('cart', JSON.stringify(data))
     },
+    getData() {
+      this.cart = JSON.parse(localStorage.getItem('cart'))
+    },
     updateCart(payload) {
       this.setData(payload)
-      this.cart = JSON.parse(localStorage.getItem('cart'))
+      this.getData()
     }
   },
   computed: {

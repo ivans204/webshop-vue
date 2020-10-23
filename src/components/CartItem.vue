@@ -27,16 +27,11 @@ export default {
     cart: Array
   },
   methods: {
-    setData(data = this.cart) {
-      localStorage.setItem('cart', JSON.stringify(data))
-    },
     addItemQuantity(item) {
       item.quantity++
-      this.setData()
     },
     removeItemQuantity(item) {
       item.quantity > 1 ? item.quantity-- : this.$emit('getNewCart', item.id)
-      this.setData()
     },
     deleteItem(item) {
       this.$emit('getNewCart', item.id)
