@@ -1,6 +1,6 @@
 <template>
   <div class="product">
-    <img :src="require('@/assets/placeholder.png')" alt="">
+    <img class="product-image" :src="require('@/assets/placeholder.png')" alt="">
     <div class="product-details">
       <h3>{{ product.name }}</h3>
 
@@ -43,6 +43,10 @@ export default {
 .product {
   margin: 50px;
   box-shadow: 0 0 10px rgba(0, 0, 0, .02), 0 10px 20px rgba(0, 0, 0, .02);
+
+  .product-image {
+    width: 100%;
+  }
 
   .product-details {
     padding: 0 25px;
