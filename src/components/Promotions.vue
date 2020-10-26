@@ -27,109 +27,104 @@
 </template>
 
 <script>
-  import discountCodes from "@/discountCodes";
+import discountCodes from "@/discountCodes";
 
-  export default {
-    name: 'Product',
-    data: () => ({
-      codes: discountCodes,
-      voucher: '',
-      inputDisabled: false,
-      activeCodes: JSON.parse(localStorage.getItem('activeCodes')) || [],
-    }),
-    props: {
-      cart: Array
+export default {
+  name: 'Product',
+  data: () => ({
+    codes: discountCodes,
+    voucher: '',
+    inputDisabled: false,
+    activeCodes: JSON.parse(localStorage.getItem('activeCodes')) || [],
+  }),
+  props: {
+    cart: Array
+  },
+  methods: {
+    setData(data = this.activeCodes) {
+      localStorage.setItem('activeCodes', JSON.stringify(data))
     },
-    methods: {
-      setData(data = this.activeCodes) {
-        localStorage.setItem('activeCodes', JSON.stringify(data))
-      },
-      getData() {
-        this.activeCodes = JSON.parse(localStorage.getItem('activeCodes'))
-      },
-      addPromotions() {
-        this.codes.map(discount => {
-          if (discount.code === this.voucher && discount.repeatable === false) {
-            this.activeCodes = []
-            this.activeCodes.push(discount)
-            this.inputDisabled = true
-          } else if (discount.code === this.voucher && !this.activeCodes.some(item => item.code === discount.code)) {
-            this.activeCodes.push(discount)
-          }
-        })
-        this.voucher = ''
-        this.setData()
-        this.getData()
-      },
-      removePromotion(promotion) {
-        if (promotion.repeatable === false) this.inputDisabled = false
-        this.setData(this.activeCodes.filter(item => item !== promotion))
-        this.getData()
-      }
+    getData() {
+      this.activeCodes = JSON.parse(localStorage.getItem('activeCodes'))
     },
-    computed: {
-      cartPriceTotal() {
-        let cartTotal = this.cart.reduce((total, product) => (product.price * product.quantity) + total, 0)
-
-        if (this.activeCodes.length) {
-          this.activeCodes.forEach(item => {
-            if (item.discount < 1 && !item.repeatable) {
-              cartTotal = cartTotal * item.discount
-            } else if (item.discount < 1 && item.repeatable) {
-              cartTotal = cartTotal * item.discount
-            } else if (item.discount > 1 && item.repeatable) {
-              cartTotal = cartTotal - item.discount
-            }
-          })
+    addPromotions() {
+      this.codes.map(discount => {
+        if (discount.code === this.voucher && discount.repeatable === false) {
+          this.activeCodes = []
+          this.activeCodes.push(discount)
+          this.inputDisabled = true
+        } else if (discount.code === this.voucher && !this.activeCodes.some(item => item.code === discount.code)) {
+          this.activeCodes.push(discount)
         }
-        return cartTotal.toFixed(2)
-      },
+      })
+      this.voucher = ''
+      this.setData()
+      this.getData()
     },
-    mounted() {
-      if (this.activeCodes.some(item => item.repeatable === false)) {
-        this.inputDisabled = true
+    removePromotion(promotion) {
+      if (promotion.repeatable === false) this.inputDisabled = false
+      this.setData(this.activeCodes.filter(item => item !== promotion))
+      this.getData()
+    }
+  },
+  computed: {
+    cartPriceTotal() {
+      let cartTotal = this.cart.reduce((total, product) => parseFloat(product.price) + total, 0)
+
+      if (this.activeCodes.length) {
+        const codesDeduct = this.activeCodes.filter(item => item.discount > 1)
+        const codesPercentage = this.activeCodes.filter(item => item.discount < 1)
+
+        codesDeduct.forEach(item => cartTotal -= item.discount)
+        codesPercentage.forEach(item => cartTotal *= item.discount)
       }
+      return cartTotal.toFixed(2)
+    },
+  },
+  mounted() {
+    if (this.activeCodes.some(item => item.repeatable === false)) {
+      this.inputDisabled = true
     }
   }
+}
 </script>
 
 <style lang="scss" scoped>
 
-  .input-code {
-    padding: 5px 10px;
-    /*text-transform: uppercase;*/
+.input-code {
+  padding: 5px 10px;
 
-    &:focus {
-      outline: none;
-    }
+  &:focus {
+    outline: none;
+  }
+}
+
+.btn-add {
+  margin-top: 20px;
+  border: 1px solid #4fc3f7;
+  background: transparent;
+  border-radius: 5px;
+  width: 100%;
+  padding: 5px 10px;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.code-list {
+  .code-list-item {
+    display: flex;
+    justify-content: space-between;
   }
 
-  .btn-add {
-    margin-top: 20px;
-    border: 1px solid #4fc3f7;
+  .code-list_btn-remove {
+    border: none;
     background: transparent;
-    border-radius: 5px;
-    width: 100%;
-    padding: 5px 10px;
 
     &:focus {
       outline: none;
     }
   }
-
-  .code-list {
-    .code-list-item {
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .code-list_btn-remove {
-      border: none;
-      background: transparent;
-
-      &:focus {
-        outline: none;
-      }
-    }
-  }
+}
 </style>
