@@ -8,6 +8,8 @@ const productsData = [
         id: 2,
         name: 'Motion Sensor',
         price: 24.99,
+        promotionQuantity: 3,
+        promotionPrice: 65
     },
     {
         id: 3,
@@ -18,6 +20,8 @@ const productsData = [
         id: 4,
         name: 'Smoke Sensor',
         price: 19.99,
+        promotionQuantity: 2,
+        promotionPrice: 35
     },
     {
         id: 5,

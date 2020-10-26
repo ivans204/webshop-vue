@@ -9,7 +9,7 @@
     <b-row v-for="(item, index) in cart" :key="index" class="checkout-table">
       <b-col>{{ item.name }}</b-col>
       <b-col class="text-center">{{ item.quantity }}</b-col>
-      <b-col>{{ (item.price * item.quantity).toFixed(2) }} €</b-col>
+      <b-col>{{ item.price }} €</b-col>
     </b-row>
     <b-row class="checkout-table">
       <b-col>Promotions:</b-col>
@@ -36,18 +36,14 @@ export default {
   methods: {},
   computed: {
     cartPriceTotal() {
-      let cartTotal = this.cart.reduce((total, product) => (product.price * product.quantity) + total, 0)
+      let cartTotal = this.cart.reduce((total, product) => parseFloat(product.price) + total, 0)
 
       if (this.activeCodes.length) {
-        this.activeCodes.forEach(item => {
-          if (item.discount < 1 && !item.repeatable) {
-            cartTotal = cartTotal * item.discount
-          } else if (item.discount < 1 && item.repeatable) {
-            cartTotal = cartTotal * item.discount
-          } else if (item.discount > 1 && item.repeatable) {
-            cartTotal = cartTotal - item.discount
-          }
-        })
+        const subs = this.activeCodes.filter(item => item.discount > 1)
+        const times = this.activeCodes.filter(item => item.discount < 1)
+
+        subs.forEach(item => cartTotal -= item.discount)
+        times.forEach(item => cartTotal *= item.discount)
       }
       return cartTotal.toFixed(2)
     },

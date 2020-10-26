@@ -13,6 +13,8 @@
 </template>
 
 <script>
+import productsData from "@/productsData";
+
 export default {
   name: 'Product',
   props: {
@@ -32,9 +34,20 @@ export default {
         this.cart.push(item)
       } else {
         item = {...item, quantity: cartItem.quantity++}
+        cartItem.price = item.price * cartItem.quantity
+        this.updateItemPrice(cartItem)
       }
       this.setData()
     },
+    updateItemPrice(item) {
+      const realPrice = productsData.find(product => product.id === item.id)
+
+      if (item.quantity % item.promotionQuantity === 0) {
+        item.price = item.promotionPrice * (item.quantity / item.promotionQuantity)
+      } else {
+        item.price = (realPrice.price * item.quantity).toFixed(2)
+      }
+    }
   }
 }
 </script>

@@ -14,12 +14,13 @@
         <img :src="require('@/assets/plus-circle.svg')" alt="">
       </button>
     </b-col>
-    <b-col>{{ (item.price * item.quantity).toFixed(2) }} €</b-col>
-
+    <b-col>{{ item.price }} €</b-col>
   </b-row>
 </template>
 
 <script>
+import productsData from "@/productsData";
+
 export default {
   name: 'Product',
   props: {
@@ -29,14 +30,28 @@ export default {
   methods: {
     addItemQuantity(item) {
       item.quantity++
+      this.updateItemPrice(item)
     },
     removeItemQuantity(item) {
       item.quantity > 1 ? item.quantity-- : this.$emit('getNewCart', item.id)
+      this.updateItemPrice(item)
     },
     deleteItem(item) {
       this.$emit('getNewCart', item.id)
+    },
+    updateItemPrice(item) {
+      const realPrice = productsData.find(product => product.id === item.id)
+
+      if (item.quantity % item.promotionQuantity === 0) {
+        item.price = item.promotionPrice * (item.quantity / item.promotionQuantity)
+      } else {
+        item.price = (realPrice.price * item.quantity).toFixed(2)
+      }
     }
   },
+  mounted() {
+    this.updateItemPrice(this.item);
+  }
 }
 </script>
 
